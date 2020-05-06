@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Dropdown } from 'semantic-ui-react';
+import { Select, Input, Segment, Grid } from 'semantic-ui-react';
 import $ from 'jquery';
 
 class Landing extends Component {
@@ -39,35 +39,42 @@ class Landing extends Component {
 	}
 
 	render() {
-		const menu = (s) => (
-			<div style={s}>
-			<Menu vertical>
-				<Dropdown
-					placeholder='Industry'
-					fluid
-					selection
-					options={this.state.industries.map(o => ({
-						key: o,
-						text: o,
-						value: o
-					}))}
-					onChange={this.handleDrop} 
-				/>
-			</Menu>
+	
+		const indInput = () => <Input placeholder='Industry' value={this.state.textValue} onChange={this.handleText} />
+
+		const selInput = () => (
+			<Select
+				placeholder='Industry'
+				fluid
+				options={this.state.industries.map(o => ({
+					key: o,
+					text: o,
+					value: o
+				}))}
+				onChange={this.handleDrop} 
+			/>
+		)
+
+		const structure = () => (
+			<div>
+				<Grid Columns={1}>
+					<Grid.Row>
+						<Grid.Column>
+							<indInput />
+							<selInput />
+						</Grid.Column>
+					</Grid.Row>
+					<Grid.Row>
+						<Grid.Column>
+							<Link to="/stock$symbol=AAL">Example</Link>
+						</Grid.Column>
+					</Grid.Row>
+				</Grid>
 			</div>
 		)
 
 
-		return (
-			<div style={{ width: "800px", margin: "0 auto" }}>
-				<div style={{ margin: "0 auto", overflow: "hidden" }}>
-					<input style={{ float: "left" }} type='text' placeholder='Industry' value={this.state.textValue} onChange={this.handleText}></input>
-					<a>OR</a>
-					{menu({ float: "right" })}
-				</div>
-				<Link to="/stock&symbol=AAL">Example Stock</Link>
-			</div>
-		)
+		return structure()
 	}
 }
 

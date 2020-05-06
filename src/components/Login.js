@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Route, NavLink, matchPath } from 'react-router-dom';
+import { Form, Tab, Input, Button } from 'semantic-ui-react';
 import $ from 'jquery';
 
 class Login extends Component {
@@ -25,16 +26,56 @@ class Login extends Component {
 	}
 
 	render() {
+		
+		const panes = [{
+				menuItem: {
+					as: NavLink,
+					content: 'Login',
+					to: '/login',
+					key: 'login'
+				},
+				render: () => (
+					<Route path="/login">
+						<Form style={{ margin: "21px" }}>
+							<Form.Field control={Input} label='Email' placeholder='Email' type='email' />
+							<Form.Field control={Input} label='Password' placeholder='Password' type='password' />
+							<Form.Field control={Button}>Login</Form.Field>
+						</Form>
+						<p style={{ textAlign: "center" }}>Not a member? <Link to="/register">Register now!</Link></p>
+					</Route>
+				)
+			}, {
+				menuItem: {
+					as: NavLink,
+					content: 'Register',
+					to: '/register',
+					key: 'register'
+				},
+				render: () => (
+					<Route path="/register">
+						<Form style={{ margin: "21px" }}>
+							<Form.Field required control={Input} label='Email' placeholder='Email' type='email' />
+							<Form.Field control={Input} label='Username' placeholder='Username' />
+							<Form.Field required control={Input} label='Password' placeholder='Password' type='password' />
+							<Form.Field required control={Input} label='Confirm Password' placeholder='Password' type='password' />
+							<Form.Field control={Button}>Register</Form.Field>
+						</Form>
+					</Route>
+				)
+			}
+		]
+
+		const defaultActiveIndex = panes.findIndex(pane => {
+			return !!matchPath(window.location.pathname, {
+				path: pane.menuItem.to,
+				exact: true
+			})
+		})
+		
+		const TabMenu = () => <Tab defaultActiveIndex={defaultActiveIndex} panes={panes} />
+
 		return (
-			<div style={{ width: "800px", margin: "0 auto" }}>
-				<h1 style={{ textAlign: "center" }}>Login</h1>
-				<form onSubmit={this.handleSubmit}>
-					<label>Email<input type='email' placeholder='Email' value={this.state.email} onChange={this.handleEmail} /></label>
-					<label>Password<input type='password' placeholder='Password' value={this.state.password} onChange={this.handlePassword} /></label>
-					<input type='submit' value='Submit' />
-				</form>
-				<a style={{ textAlign: "center" }}>Not a member? <Link to="/register">Register now!</Link></a>
-			</div>
+			<TabMenu />
 		)
 	}
 }
