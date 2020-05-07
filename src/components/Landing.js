@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { Select, Input, Grid, Table, Header } from 'semantic-ui-react';
+import { Select, Input, Grid, Table, Header, Pagination } from 'semantic-ui-react';
+import { ceil } from 'mathjs';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -22,6 +23,10 @@ class Landing extends Component {
 			column: null,
 			direction: null,
 
+			// Pagination
+			page: 1,
+			displayed: this.props.stocks.slice(0, 15),
+
 			// Table Links
 			stockPage: null,
 			redirect: false
@@ -31,20 +36,29 @@ class Landing extends Component {
 		this.handleDrop = this.handleDrop.bind(this)
 		this.handleSearch = this.handleSearch.bind(this)
 		this.updateFilters = this.updateFilters.bind(this)
+		this.pageChange = this.pageChange.bind(this)
 	}
 
-	updateFilters(search, drop, stocks) {
-		this.setState({
-			filtered: stocks.filter(item => {
-				return Object.keys(item).some(key =>
-					item[key].toLowerCase().includes(search.toLowerCase())
-				)
-			}).filter(item => {
-				return Object.keys(item).some(key =>
-					item[key].toLowerCase().includes(drop=='All'?'':drop.toLowerCase())
-				)
-			})
+	updateFilters(search, drop, stocks, page) {
+		const f = stocks.filter(item => {
+			return Object.keys(item).some(key =>
+				item[key].toLowerCase().includes(search.toLowerCase())
+			)
+		}).filter(item => {
+			return Object.keys(item).some(key =>
+				item[key].includes(drop=='All'?'':drop)
+			)
 		})
+
+		this.setState({
+			filtered: f,
+			displayed: f.slice((page-1)*15, page*15)
+		})
+	}
+
+	pageChange(event, data) {
+		this.setState({ page: data.activePage })
+		this.updateFilters(this.state.search, this.state.drop, this.state.stocks, data.activePage)
 	}
 
 	handleSort = (clickedColumn) => () => {
@@ -55,21 +69,22 @@ class Landing extends Component {
 				stocks: _.sortBy(stocks, clickedColumn=='Name'?'name':clickedColumn=='Ticker'?'symbol':'industry'),
 				direction: 'ascending',
 			})
-			this.updateFilters(this.state.search, this.state.drop, _.sortBy(stocks, clickedColumn=='Name'?'name':clickedColumn=='Ticker'?'symbol':'industry'))
+			this.updateFilters(this.state.search, this.state.drop, _.sortBy(stocks, clickedColumn=='Name'?'name':clickedColumn=='Ticker'?'symbol':'industry'), this.state.page)
 			return
 		}
 		this.setState({
 			stocks: stocks.reverse(),
 			direction: direction === 'ascending' ? 'descending' : 'ascending',
 		})
-		this.updateFilters(this.state.search, this.state.drop, stocks)
+		this.updateFilters(this.state.search, this.state.drop, stocks, this.state.page)
 	}
 
 	handleDrop(event, { value }) {
 		this.setState({
-			drop: value
+			drop: value,
+			page: 1
 		})
-		this.updateFilters(this.state.search, value, this.state.stocks)
+		this.updateFilters(this.state.search, value, this.state.stocks, 1)
 	}
 
 	componentDidUpdate() {
@@ -78,9 +93,10 @@ class Landing extends Component {
 
 	handleSearch(event, { value }) {
 		this.setState({
-			search: value
+			search: value,
+			page: 1
 		})
-		this.updateFilters(value, this.state.drop, this.state.stocks)
+		this.updateFilters(value, this.state.drop, this.state.stocks, 1)
 	}
 
 	handleClick = (object) => () => {
@@ -139,7 +155,7 @@ class Landing extends Component {
 
 		const TableBody = () => (
 			<Table.Body>
-				{this.state.filtered.map(o => (
+				{this.state.displayed.map(o => (
 					<Table.Row key={o.symbol} onClick={this.handleClick(o)}>
 						<Table.Cell>{o.name}</Table.Cell>
 						<Table.Cell>{o.symbol}</Table.Cell>
@@ -149,12 +165,23 @@ class Landing extends Component {
 			</Table.Body>
 		)
 
+		const Pages = () => (
+			<Pagination
+				style={{ display: "flex", justifyContent: "center" }}
+				defaultActivePage={this.state.page}
+				pointing
+				secondary
+				totalPages={ceil(this.state.filtered.length/15)}
+				onPageChange={this.pageChange}
+			/>
+		)
+
 		const Structure = () => (
 			<div style={{ width: "800px" }}>
 				<Grid columns={3}>
 					<Grid.Row>
 						<Grid.Column style={{ width: "37%" }}><Search /></Grid.Column>
-						<Grid.Column style={{ width: "26%" }}></Grid.Column>
+						<Grid.Column style={{ width: "26%" }} />
 						<Grid.Column style={{ width: "37%" }}><Industry /></Grid.Column>
 					</Grid.Row>
 				</Grid>
@@ -162,6 +189,7 @@ class Landing extends Component {
 					<TableHeader />
 					<TableBody />
 				</Table>
+				<Pages />
 			</div>
 		)
 
