@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link, Route, NavLink, matchPath } from 'react-router-dom';
 import { Form, Tab, Input, Button } from 'semantic-ui-react';
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 import $ from 'jquery';
 
 class Login extends Component {
@@ -36,11 +38,7 @@ class Login extends Component {
 				},
 				render: () => (
 					<Route path="/login">
-						<Form style={{ margin: "21px" }}>
-							<Form.Field control={Input} label='Email' placeholder='Email' type='email' />
-							<Form.Field control={Input} label='Password' placeholder='Password' type='password' />
-							<Form.Field control={Button}>Login</Form.Field>
-						</Form>
+						<LoginForm />
 						<p style={{ textAlign: "center" }}>Not a member? <Link to="/register">Register now!</Link></p>
 					</Route>
 				)
@@ -53,13 +51,7 @@ class Login extends Component {
 				},
 				render: () => (
 					<Route path="/register">
-						<Form style={{ margin: "21px" }}>
-							<Form.Field required control={Input} label='Email' placeholder='Email' type='email' />
-							<Form.Field control={Input} label='Username' placeholder='Username' />
-							<Form.Field required control={Input} label='Password' placeholder='Password' type='password' />
-							<Form.Field required control={Input} label='Confirm Password' placeholder='Password' type='password' />
-							<Form.Field control={Button}>Register</Form.Field>
-						</Form>
+						<RegisterForm />
 					</Route>
 				)
 			}

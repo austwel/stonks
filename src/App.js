@@ -3,7 +3,6 @@ import Landing from "./components/Landing";
 import Header from "./components/Header";
 import Stock from "./components/Stock";
 import Login from "./components/Login"
-import Register from "./components/Register";
 import "semantic-ui-css/semantic.min.css";
 import { Grid } from "semantic-ui-react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";

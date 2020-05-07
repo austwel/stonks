@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Select, Input, Segment, Grid } from 'semantic-ui-react';
+import { Select, Input, Grid, Table } from 'semantic-ui-react';
 import $ from 'jquery';
 
 class Landing extends Component {
@@ -11,6 +11,7 @@ class Landing extends Component {
 			textValue: '',
 			dropValue: '',
 			industries: [
+				"All",
 				"Health Care",
 				"Financials",
 				"Industrials",
@@ -23,7 +24,23 @@ class Landing extends Component {
 				"Telecommunication Services",
 				"Utilities"
 			],
-			stocks: []
+			stocks: [
+				{
+					name: "Stock 1",
+					symbol: "SYM1",
+					industry: "Health Care"
+				},
+				{
+					name: "Stock 2",
+					symbol: "SYM2",
+					industry: "Financials"
+				},
+				{
+					name: "Stock 3",
+					symbol: "SYM3",
+					industry: "Industrials"
+				}
+			]
 		}
 
 		this.handleText = this.handleText.bind(this)
@@ -31,18 +48,20 @@ class Landing extends Component {
 	}
 
 	handleText(event) {
-		this.setState({ textValue: event.target.value, industry: event.target.value, dropValue: '' })
+		this.setState({ })
 	}
 
 	handleDrop(event, data) {
-		this.setState({ dropValue: data.value, industry: data.value, textValue: '' })
+		this.setState({ })
 	}
 
 	render() {
 	
-		const indInput = () => <Input placeholder='Industry' value={this.state.textValue} onChange={this.handleText} />
+		const Search = () => (
+			<Input style={{ width: "100%" }} placeholder='Search' icon='search' iconPosition='left' value={this.state.textValue} onChange={this.handleText} />
+		)
 
-		const selInput = () => (
+		const Industry = () => (
 			<Select
 				placeholder='Industry'
 				fluid
@@ -55,26 +74,48 @@ class Landing extends Component {
 			/>
 		)
 
-		const structure = () => (
-			<div>
-				<Grid Columns={1}>
+		const TableHeader = () => (
+			<Table.Header>
+				<Table.Row>
+					{["Name", "Ticker", "Industry"].map(o => (
+						<Table.HeaderCell>{o}</Table.HeaderCell>
+					))}
+				</Table.Row>
+			</Table.Header>
+		)
+
+		const TableBody = () => (
+			<Table.Body>
+				{this.state.stocks.map(o => (
+					<Table.Row>
+						<Table.Cell>{o.name}</Table.Cell>
+						<Table.Cell>{o.symbol}</Table.Cell>
+						<Table.Cell>{o.industry}</Table.Cell>
+					</Table.Row>
+				))}
+			</Table.Body>
+		)
+
+		const Structure = () => (
+			<div style={{ width: "800px" }}>
+				<Grid Columns={3}>
 					<Grid.Row>
-						<Grid.Column>
-							<indInput />
-							<selInput />
-						</Grid.Column>
-					</Grid.Row>
-					<Grid.Row>
-						<Grid.Column>
-							<Link to="/stock$symbol=AAL">Example</Link>
-						</Grid.Column>
+						<Grid.Column style={{ width: "37%" }}><Search /></Grid.Column>
+						<Grid.Column style={{ width: "26%" }}></Grid.Column>
+						<Grid.Column style={{ width: "37%" }}><Industry /></Grid.Column>
 					</Grid.Row>
 				</Grid>
+				<Table celled>
+					<TableHeader />
+					<TableBody />
+				</Table>
 			</div>
 		)
 
 
-		return structure()
+		return (
+			<Structure />
+		)
 	}
 }
 
