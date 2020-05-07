@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Select, Input, Grid, Table } from 'semantic-ui-react';
 import $ from 'jquery';
+import _ from 'lodash';
 
 class Landing extends Component {
 	constructor(props) {
@@ -10,37 +11,12 @@ class Landing extends Component {
 			industry: '',
 			textValue: '',
 			dropValue: '',
-			industries: [
-				"All",
-				"Health Care",
-				"Financials",
-				"Industrials",
-				"Real Estate",
-				"Consumer Discretionary",
-				"Materials",
-				"Information Technology",
-				"Energy",
-				"Consumer Staples",
-				"Telecommunication Services",
-				"Utilities"
-			],
-			stocks: [
-				{
-					name: "Stock 1",
-					symbol: "SYM1",
-					industry: "Health Care"
-				},
-				{
-					name: "Stock 2",
-					symbol: "SYM2",
-					industry: "Financials"
-				},
-				{
-					name: "Stock 3",
-					symbol: "SYM3",
-					industry: "Industrials"
-				}
-			]
+			industries: this.props.industries,
+			stocks: this.props.stocks,
+			column: null,
+			direction: null,
+			stockPage: null,
+			redirect: false
 		}
 
 		this.handleText = this.handleText.bind(this)
@@ -55,7 +31,33 @@ class Landing extends Component {
 		this.setState({ })
 	}
 
+	handleSort = (clickedColumn) => () => {
+		const { column, stocks, direction } = this.state
+
+		if(column !== clickedColumn) {
+			this.setState({
+				column: clickedColumn,
+				data: _.sortBy(stocks, [clickedColumn]),
+				direction: 'ascending'
+			})
+			return
+		}
+
+		this.setState({
+			stocks: stocks.reverse(),
+			direction: direction === 'ascending' ? 'descending' : 'ascending'
+		})
+	}
+
+	handleClick = (object) => () => {
+		this.setState({ redirect: true, stockPage: object.symbol })
+	}
+
 	render() {
+
+		if(this.state.redirect) {
+			return <Redirect push to={"/stock?ticker="+this.state.stockPage} />
+		}
 	
 		const Search = () => (
 			<Input style={{ width: "100%" }} placeholder='Search' icon='search' iconPosition='left' value={this.state.textValue} onChange={this.handleText} />
@@ -78,7 +80,12 @@ class Landing extends Component {
 			<Table.Header>
 				<Table.Row>
 					{["Name", "Ticker", "Industry"].map(o => (
-						<Table.HeaderCell>{o}</Table.HeaderCell>
+						<Table.HeaderCell 
+							sorted={this.state.column === o ? this.state.direction : null}
+							onClick={this.handleSort(o)}
+						>
+							{o}
+						</Table.HeaderCell>
 					))}
 				</Table.Row>
 			</Table.Header>
@@ -87,7 +94,7 @@ class Landing extends Component {
 		const TableBody = () => (
 			<Table.Body>
 				{this.state.stocks.map(o => (
-					<Table.Row>
+					<Table.Row onClick={this.handleClick(o)}>
 						<Table.Cell>{o.name}</Table.Cell>
 						<Table.Cell>{o.symbol}</Table.Cell>
 						<Table.Cell>{o.industry}</Table.Cell>
@@ -105,7 +112,7 @@ class Landing extends Component {
 						<Grid.Column style={{ width: "37%" }}><Industry /></Grid.Column>
 					</Grid.Row>
 				</Grid>
-				<Table celled>
+				<Table fixed striped sortable selectable>
 					<TableHeader />
 					<TableBody />
 				</Table>

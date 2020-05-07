@@ -8,6 +8,43 @@ import { Grid } from "semantic-ui-react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 class App extends Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+			stocks: [
+				{
+					name: "Stock 1",
+					symbol: "SYM1",
+					industry: "Financials"
+				},
+				{
+					name: "Stock 2",
+					symbol: "SYM2",
+					industry: "Industrials"
+				},
+				{
+					name: "Stock 3",
+					symbol: "SYM3",
+					industry: "Health Care"
+				}
+			],
+			industries: [
+				"All",
+				"Health Care",
+				"Financials",
+				"Industrials",
+				"Real Estate",
+				"Consumer Discretionary",
+				"Materials",
+				"Information Technology",
+				"Energy",
+				"Consumer Staples",
+				"Telecommunication Services",
+				"Utilities"
+			]
+		}
+	}
+
 	render() {
 		return (
 			<Router>
@@ -22,8 +59,8 @@ class App extends Component {
 							<Grid.Column>
 								<div style={{ width: "800px", margin: "0 auto" }}>
 									<Switch>
-										<Route path="/" exact component={Landing} />
-										<Route path="/stock" component={Stock} />
+										<Route path="/" exact render={(props) => <Landing {...props} stocks={this.state.stocks} industries={this.state.industries} />} />
+										<Route path="/stock" render={(props) => <Stock {...props} stocks={this.state.stocks} industries={this.state.industries} />} />
 										<Route path="/login" component={Login} />
 										<Route path="/register" component={Login} />
 									</Switch>
