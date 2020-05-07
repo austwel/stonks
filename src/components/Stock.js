@@ -14,7 +14,6 @@ class Stock extends Component {
 	}
 
 	render() {
-		console.log(this.state.stocks)
 		if(!this.state.stocks.some(stock => stock.symbol === this.state.ticker)) {
 			return (
 				<Header as='h1' style={{ width: "300px", margin: "0 auto", "margin-top": "50px" }}>

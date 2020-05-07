@@ -1,33 +1,20 @@
-import React, { Component }  from 'react';
+import React, { Component, useState, useEffect }  from 'react';
 import Landing from "./components/Landing";
 import Header from "./components/Header";
 import Stock from "./components/Stock";
-import Login from "./components/Login"
+import Login from "./components/Login";
+import Loading from "./components/Loading";
 import "semantic-ui-css/semantic.min.css";
 import { Grid } from "semantic-ui-react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import $ from 'jquery';
 
 class App extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			stocks: [
-				{
-					name: "Stock 1",
-					symbol: "SYM1",
-					industry: "Financials"
-				},
-				{
-					name: "Stock 2",
-					symbol: "SYM2",
-					industry: "Industrials"
-				},
-				{
-					name: "Stock 3",
-					symbol: "SYM3",
-					industry: "Health Care"
-				}
-			],
+			loading: true,
+			stocks: [],
 			industries: [
 				"All",
 				"Health Care",
@@ -45,7 +32,32 @@ class App extends Component {
 		}
 	}
 
+	componentDidMount() {
+		$.getJSON("http://131.181.190.87:3000/stocks/symbols", (res) => {
+			this.setState({ stocks: res, loading: false })
+		})
+	}
+
 	render() {
+
+		const WaitingRoutes = () => {
+			if(this.state.loading) {
+				return (
+					<div>
+						<Route path="/" exact component={Loading} />
+						<Route path="/stock" component={Loading} />
+					</div>
+				)
+			} else {
+				return (
+					<div>
+						<Route path="/" exact render={(props) => <Landing {...props} stocks={this.state.stocks} industries={this.state.industries} loading={this.state.loading} onPropChange={this.onChange} />} />
+						<Route path="/stock" render={(props) => <Stock {...props} stocks={this.state.stocks} industries={this.state.industries} loading={this.state.loading} />} />
+					</div>
+				)
+			}
+		}
+		
 		return (
 			<Router>
 		  		<div className="App">
@@ -59,10 +71,9 @@ class App extends Component {
 							<Grid.Column>
 								<div style={{ width: "800px", margin: "0 auto" }}>
 									<Switch>
-										<Route path="/" exact render={(props) => <Landing {...props} stocks={this.state.stocks} industries={this.state.industries} />} />
-										<Route path="/stock" render={(props) => <Stock {...props} stocks={this.state.stocks} industries={this.state.industries} />} />
 										<Route path="/login" component={Login} />
 										<Route path="/register" component={Login} />
+										<WaitingRoutes />
 									</Switch>
 								</div>
 							</Grid.Column>
