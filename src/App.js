@@ -29,7 +29,7 @@ class App extends Component {
 				"Consumer Staples",
 				"Telecommunication Services",
 				"Utilities"
-			]
+			],
 		}
 		this.update = this.update.bind(this)
 	}
@@ -57,8 +57,32 @@ class App extends Component {
 			} else {
 				return (
 					<div>
-						<Route path="/" exact render={(props) => <Landing {...props} stocks={this.state.stocks} industries={this.state.industries} loading={this.state.loading} />} />
-						<Route path="/stock" render={(props) => <Stock {...props} stocks={this.state.stocks} industries={this.state.industries} loading={this.state.loading} />} />
+						<Route 
+							path="/" 
+							exact 
+							render={(props) => 
+								<Landing 
+									{...props} 
+									stocks={this.state.stocks} 
+									industries={this.state.industries} 
+									loading={this.state.loading} 
+									updatePage={this.updatePage} 
+								/>
+							}
+						/>
+						<Route 
+							path="/stock" 
+							render={(props) => 
+								<Stock 
+									{...props} 
+									stocks={this.state.stocks} 
+									industries={this.state.industries} 
+									loading={this.state.loading} 
+									update={this.update} 
+									updatePage={this.updatePage}
+								/>
+							} 
+						/>
 					</div>
 				)
 			}
@@ -70,15 +94,35 @@ class App extends Component {
 					<Grid columns={1}>
 						<Grid.Row>
 							<Grid.Column>
-		  						<Header update={this.update} />
+		  						<Header 
+									update={this.update} 
+								/>
 							</Grid.Column>
 						</Grid.Row>
 						<Grid.Row>
 							<Grid.Column>
 								<div style={{ width: "800px", margin: "0 auto" }}>
 									<Switch>
-										<Route path="/register" render={(props) => <Login {...props} update={this.update} />} />
-										<Route path="/login" render={(props) => <Login {...props} update={this.update} />} />
+										<Route 
+											path="/register" 
+											render={(props) => 
+												<Login 
+													{...props} 
+													update={this.update} 
+													updatePage={this.updatePage} 
+												/>
+											}
+										/>
+										<Route 
+											path="/login" 
+											render={(props) => 
+												<Login 
+													{...props} 
+													update={this.update} 
+													updatePage={this.updatePage} 
+												/>
+											} 
+										/>
 										<WaitingRoutes />
 									</Switch>
 								</div>

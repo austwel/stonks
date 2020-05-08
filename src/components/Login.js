@@ -16,7 +16,7 @@ class Login extends Component {
 		sessionStorage.removeItem("token")
 		this.props.update()
 	}
-	
+
 	render() {
 
 		const panes = [{

@@ -54,7 +54,7 @@ class Landing extends Component {
 			filtered: f,
 			displayed: f.slice((page-1)*15, page*15)
 		})
-	}
+		}
 
 	pageChange(event, data) {
 		this.setState({ page: data.activePage })

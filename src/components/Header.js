@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'semantic-ui-react';
+import { Button, Breadcrumb } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 
@@ -12,7 +12,6 @@ class Header extends Component {
 
 	logOut() {
 		sessionStorage.removeItem("token")
-		console.log(sessionStorage.getItem("token"))
 		this.props.update()
 	}
 
