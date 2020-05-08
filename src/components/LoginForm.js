@@ -25,6 +25,8 @@ class LoginForm extends Component {
 		this.close = this.close.bind(this)
 	}
 
+	setToken = this.props.setToken
+
 	handleEmail(event) { this.setState({ email: event.target.value }) }
 
 	handlePassword(event) { this.setState({ password: event.target.value }) }
@@ -34,10 +36,10 @@ class LoginForm extends Component {
 			email: this.state.email,
 			password: this.state.password
 		}, (res, status) => {
-			console.log(res)
+			this.setState({ redirect: true })
+			this.props.setToken({ token: res.token, user: this.state.email })
 		}, 'json')
-			.done(() => { 
-				this.setState({ redirect: true })
+			.then(() => {
 			})
 			.fail((res) => { 
 				this.setState({ errors: res, modal: true })

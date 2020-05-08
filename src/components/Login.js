@@ -8,8 +8,9 @@ import $ from 'jquery';
 class Login extends Component {
 	constructor(props) {
 		super(props)
-	}
 
+	}
+	
 	render() {
 
 		const panes = [{
@@ -21,7 +22,7 @@ class Login extends Component {
 				},
 				render: () => (
 					<Route path="/login">
-						<LoginForm />
+						<LoginForm setToken={this.props.setToken} />
 						<p style={{ textAlign: "center" }}>
 							Not a member? <Link to="/register">Register now!</Link>
 						</p>

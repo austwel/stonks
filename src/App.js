@@ -13,6 +13,8 @@ class App extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			user: null,
+			token: null,
 			loading: true,
 			stocks: [],
 			industries: [
@@ -30,6 +32,11 @@ class App extends Component {
 				"Utilities"
 			]
 		}
+		this.setToken = this.setToken.bind(this)
+	}
+
+	setToken(event) {
+		this.setState({ token: event.token, user: event.user })
 	}
 
 	componentDidMount() {
@@ -64,14 +71,14 @@ class App extends Component {
 					<Grid columns={1}>
 						<Grid.Row>
 							<Grid.Column>
-		  						<Header />
+		  						<Header token={this.state.token} user={this.state.user} setToken={this.setToken} />
 							</Grid.Column>
 						</Grid.Row>
 						<Grid.Row>
 							<Grid.Column>
 								<div style={{ width: "800px", margin: "0 auto" }}>
 									<Switch>
-										<Route path="/login" component={Login} />
+										<Route path="/login" render={(props) => <Login {...props} setToken={this.setToken} />} />
 										<Route path="/register" component={Login} />
 										<WaitingRoutes />
 									</Switch>
