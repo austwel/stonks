@@ -43,7 +43,6 @@ class RegisterForm extends Component {
 				email: this.state.email,
 				password: this.state.password
 			}, (res, status) => {
-				console.log(res)
 			}, 'json')
 				.done(() => {
 					this.setState({ errors: {

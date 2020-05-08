@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import jwt from 'jsonwebtoken';
 
 class Header extends Component {
 	constructor(props) {
@@ -9,24 +11,26 @@ class Header extends Component {
 	}
 
 	logOut() {
-		this.props.setToken({ token: null, user: null })
+		sessionStorage.removeItem("token")
+		console.log(sessionStorage.getItem("token"))
+		this.props.update()
 	}
 
 	render() {
 		
 		const Logins = () => {
-			if(this.props.token != null) {
+			if(sessionStorage.getItem("token") != null) {
 				return (
 					<div>
-						{this.props.user}
-						<a style={{ margin: "20px" }} href='#' onClick={this.logOut}>Log out</a>
+						<span style={{ marginRight: "10px" }}>{jwt.decode(sessionStorage.getItem("token")).email}</span>
+						<Button compact onClick={this.logOut}>Log out</Button>
 					</div>
 				)
 			} else {
 				return (
 					<div>
-						<Link to="/login" style={{ margin: "10px" }}>Login</Link>
-						<Link tp="/register" style={{ margin: "10px" }}>Register</Link>
+						<Link to="/login"><Button compact>Login</Button></Link>
+						<Link to="/register"><Button compact>Register</Button></Link>
 					</div>
 				)
 			}
@@ -36,7 +40,7 @@ class Header extends Component {
 			<div style={{ width: "800px", margin: "0 auto" }}>
 				<nav>
 					<div style={{ float: "left", margin: "10px" }}>
-						<Link to="/">Stock List</Link>
+						<Link to="/"><Button compact>Stock List</Button></Link>
 					</div>
 					<div style={{ float: "right", margin: "10px" }}>
 						<Logins />

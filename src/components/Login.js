@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { Link, Route, NavLink, matchPath } from 'react-router-dom';
-import { Form, Tab, Input, Button } from 'semantic-ui-react';
+import { Form, Tab, Input, Button, Header } from 'semantic-ui-react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import $ from 'jquery';
@@ -9,6 +9,12 @@ class Login extends Component {
 	constructor(props) {
 		super(props)
 
+		this.logOut = this.logOut.bind(this)
+	}
+
+	logOut() {
+		sessionStorage.removeItem("token")
+		this.props.update()
 	}
 	
 	render() {
@@ -22,7 +28,7 @@ class Login extends Component {
 				},
 				render: () => (
 					<Route path="/login">
-						<LoginForm setToken={this.props.setToken} />
+						<LoginForm update={this.props.update} />
 						<p style={{ textAlign: "center" }}>
 							Not a member? <Link to="/register">Register now!</Link>
 						</p>
@@ -51,10 +57,17 @@ class Login extends Component {
 		})
 		
 		const TabMenu = () => <Tab defaultActiveIndex={defaultActiveIndex} panes={panes} />
-
-		return (
-			<TabMenu />
-		)
+		
+		if(sessionStorage.getItem("token") != null) {
+			return (
+				<Header as='h1' style={{ width: "300px", margin: "0 auto", marginTop: "50px" }}>
+					Already Logged In
+					<Header.Subheader onClick={this.logOut}>Click here to log out</Header.Subheader>
+				</Header>
+			)
+		} else {
+			return <TabMenu />
+		}
 	}
 }
 

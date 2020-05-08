@@ -7,14 +7,13 @@ import Loading from "./components/Loading";
 import "semantic-ui-css/semantic.min.css";
 import { Grid } from "semantic-ui-react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import jwt from "jsonwebtoken";
 import $ from 'jquery';
 
 class App extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			user: null,
-			token: null,
 			loading: true,
 			stocks: [],
 			industries: [
@@ -32,17 +31,17 @@ class App extends Component {
 				"Utilities"
 			]
 		}
-		this.setToken = this.setToken.bind(this)
-	}
-
-	setToken(event) {
-		this.setState({ token: event.token, user: event.user })
+		this.update = this.update.bind(this)
 	}
 
 	componentDidMount() {
 		$.getJSON("http://131.181.190.87:3000/stocks/symbols", (res) => {
 			this.setState({ stocks: res, loading: false })
 		})
+	}
+
+	update() {
+		this.forceUpdate()
 	}
 
 	render() {
@@ -58,7 +57,7 @@ class App extends Component {
 			} else {
 				return (
 					<div>
-						<Route path="/" exact render={(props) => <Landing {...props} stocks={this.state.stocks} industries={this.state.industries} loading={this.state.loading} onPropChange={this.onChange} />} />
+						<Route path="/" exact render={(props) => <Landing {...props} stocks={this.state.stocks} industries={this.state.industries} loading={this.state.loading} />} />
 						<Route path="/stock" render={(props) => <Stock {...props} stocks={this.state.stocks} industries={this.state.industries} loading={this.state.loading} />} />
 					</div>
 				)
@@ -71,15 +70,15 @@ class App extends Component {
 					<Grid columns={1}>
 						<Grid.Row>
 							<Grid.Column>
-		  						<Header token={this.state.token} user={this.state.user} setToken={this.setToken} />
+		  						<Header update={this.update} />
 							</Grid.Column>
 						</Grid.Row>
 						<Grid.Row>
 							<Grid.Column>
 								<div style={{ width: "800px", margin: "0 auto" }}>
 									<Switch>
-										<Route path="/login" render={(props) => <Login {...props} setToken={this.setToken} />} />
-										<Route path="/register" component={Login} />
+										<Route path="/register" render={(props) => <Login {...props} update={this.update} />} />
+										<Route path="/login" render={(props) => <Login {...props} update={this.update} />} />
 										<WaitingRoutes />
 									</Switch>
 								</div>
