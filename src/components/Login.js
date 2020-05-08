@@ -8,27 +8,10 @@ import $ from 'jquery';
 class Login extends Component {
 	constructor(props) {
 		super(props)
-		this.state = { email: '', password: '' }
-
-		this.handleEmail = this.handleEmail.bind(this)
-		this.handlePassword = this.handlePassword.bind(this)
-		this.handleSubmit = this.handleSubmit.bind(this)
-	}
-
-	handleEmail(event) {
-		this.setState({ email: event.target.value })
-	}
-
-	handlePassword(event) {
-		this.setState({ password: event.target.value })
-	}
-
-	handleSubmit(event) {
-		console.log(`Submitted: ${this.state.email} : ${this.state.password}`)
 	}
 
 	render() {
-		
+
 		const panes = [{
 				menuItem: {
 					as: NavLink,
@@ -39,7 +22,9 @@ class Login extends Component {
 				render: () => (
 					<Route path="/login">
 						<LoginForm />
-						<p style={{ textAlign: "center" }}>Not a member? <Link to="/register">Register now!</Link></p>
+						<p style={{ textAlign: "center" }}>
+							Not a member? <Link to="/register">Register now!</Link>
+						</p>
 					</Route>
 				)
 			}, {
