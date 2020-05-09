@@ -25,7 +25,6 @@ class Landing extends Component {
 
 			// Pagination
 			page: 1,
-			displayed: this.props.stocks.slice(0, 15),
 
 			// Table Links
 			stockPage: null,
@@ -39,7 +38,7 @@ class Landing extends Component {
 		this.pageChange = this.pageChange.bind(this)
 	}
 
-	updateFilters(search, drop, stocks, page) {
+	updateFilters(search, drop, stocks) {
 		const f = stocks.filter(item => {
 			return Object.keys(item).some(key =>
 				item[key].toLowerCase().includes(search.toLowerCase())
@@ -52,13 +51,11 @@ class Landing extends Component {
 
 		this.setState({
 			filtered: f,
-			displayed: f.slice((page-1)*15, page*15)
 		})
-		}
+	}
 
 	pageChange(event, data) {
 		this.setState({ page: data.activePage })
-		this.updateFilters(this.state.search, this.state.drop, this.state.stocks, data.activePage)
 	}
 
 	handleSort = (clickedColumn) => () => {
@@ -67,16 +64,16 @@ class Landing extends Component {
 			this.setState({
 				column: clickedColumn,
 				stocks: _.sortBy(stocks, clickedColumn=='Name'?'name':clickedColumn=='Ticker'?'symbol':'industry'),
-				direction: 'ascending',
+				direction: 'ascending'
 			})
-			this.updateFilters(this.state.search, this.state.drop, _.sortBy(stocks, clickedColumn=='Name'?'name':clickedColumn=='Ticker'?'symbol':'industry'), this.state.page)
+			this.updateFilters(this.state.search, this.state.drop, _.sortBy(stocks, clickedColumn=='Name'?'name':clickedColumn=='Ticker'?'symbol':'industry'))
 			return
 		}
 		this.setState({
 			stocks: stocks.reverse(),
-			direction: direction === 'ascending' ? 'descending' : 'ascending',
+			direction: direction === 'ascending' ? 'descending' : 'ascending'
 		})
-		this.updateFilters(this.state.search, this.state.drop, stocks, this.state.page)
+		this.updateFilters(this.state.search, this.state.drop, stocks)
 	}
 
 	handleDrop(event, { value }) {
@@ -84,7 +81,7 @@ class Landing extends Component {
 			drop: value,
 			page: 1
 		})
-		this.updateFilters(this.state.search, value, this.state.stocks, 1)
+		this.updateFilters(this.state.search, value, this.state.stocks)
 	}
 
 	componentDidUpdate() {
@@ -96,7 +93,7 @@ class Landing extends Component {
 			search: value,
 			page: 1
 		})
-		this.updateFilters(value, this.state.drop, this.state.stocks, 1)
+		this.updateFilters(value, this.state.drop, this.state.stocks)
 	}
 
 	handleClick = (object) => () => {
@@ -155,7 +152,7 @@ class Landing extends Component {
 
 		const TableBody = () => (
 			<Table.Body>
-				{this.state.displayed.map(o => (
+				{this.state.filtered.slice((this.state.page-1)*15, this.state.page*15).map(o => (
 					<Table.Row key={o.symbol} onClick={this.handleClick(o)}>
 						<Table.Cell>{o.name}</Table.Cell>
 						<Table.Cell>{o.symbol}</Table.Cell>
