@@ -80,7 +80,7 @@ class RegisterForm extends Component {
 
 		const Mod = () => (
 			<Modal
-				open={this.state.modal==0?false:true}
+				open={this.state.modal===0?false:true}
 				onClose={this.close}
 			>
 				<Modal.Header>

@@ -4,9 +4,8 @@ import { Line } from 'react-chartjs-2';
 class Graph extends Component {
 	constructor(props) {
 		super(props)
-		this.state = this.props.get()
 		this.data = {
-			labels: this.state.map(o => (
+			labels: this.props.get().map(o => (
 				o.timestamp.slice(8, 10)+'/'+
 				o.timestamp.slice(5, 7)+'/'+
 				o.timestamp.slice(0, 4)
@@ -27,7 +26,7 @@ class Graph extends Component {
 				pointHoverBorderWidth: 5,
 				pointRadius: 1,
 				pointHitRadius: 15,
-				data: this.state.map(o => (o.open)).reverse()
+				data: this.props.get().map(o => (o.open)).reverse()
 			}, {
 				label: 'High',
 				fill: true,
@@ -43,7 +42,7 @@ class Graph extends Component {
 				pointHoverBorderWidth: 5,
 				pointRadius: 1,
 				pointHitRadius: 15,
-				data: this.state.map(o => (o.high)).reverse()
+				data: this.props.get().map(o => (o.high)).reverse()
 			}, {
 				label: 'Low',
 				fill: true,
@@ -59,7 +58,7 @@ class Graph extends Component {
 				pointHoverBorderWidth: 5,
 				pointRadius: 1,
 				pointHitRadius: 15,
-				data: this.state.map(o => (o.low)).reverse()
+				data: this.props.get().map(o => (o.low)).reverse()
 			}, {
 				hidden: true,
 				label: 'Close',
@@ -76,7 +75,7 @@ class Graph extends Component {
 				pointHoverBorderWidth: 5,
 				pointRadius: 1,
 				pointHitRadius: 15,
-				data: this.state.map(o => (o.close)).reverse()
+				data: this.props.get().map(o => (o.close)).reverse()
 			}, {
 				hidden: true,
 				label: 'Volume',
@@ -93,7 +92,7 @@ class Graph extends Component {
 				pointHoverBorderWidth: 5,
 				pointRadius: 1,
 				pointHitRadius: 15,
-				data: this.state.map(o => (o.volumes)).reverse()
+				data: this.props.get().map(o => (o.volumes)).reverse()
 			}]
 		}
 		this.getData = this.getData.bind(this)
