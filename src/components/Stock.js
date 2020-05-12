@@ -6,6 +6,7 @@ import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 import { ceil } from 'mathjs';
 import Graph from './Graph';
+import jwt from 'jsonwebtoken';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -94,6 +95,13 @@ class Stock extends Component {
 	handleDate(event, data) {
 		this.date = data.value
 		if(this.date===null || this.date.length===2) {
+			if(
+				sessionStorage.getItem("token")===null || 
+				jwt.decode(sessionStorage.getItem("token")).exp*1000 < new Date().getTime()) 
+			{
+				this.setState({ modal: true, err: { res: { status: 403 } } })
+				return
+			}
 			if(this.date===null) this.date=[new Date(1572998400000), new Date(1585058399000)]
 			if(this.state.direction===null) {
 				this.setState({
@@ -219,6 +227,9 @@ class Stock extends Component {
 
 	componentDidMount() {
 		if(sessionStorage.getItem("token") != null) {
+			if(jwt.decode(sessionStorage.getItem("token")).exp*1000 < new Date().getTime()) {
+				this.setState({ modal: true, err: { res: { status: 403 } } })
+			}
 			$.ajax({
 				url: 'http://131.181.190.87:3000/stocks/authed/'+this.state.ticker+'?from=2019-11-06&to=2020-03-24',
 				type: 'GET',
@@ -235,7 +246,6 @@ class Stock extends Component {
 			function setHeader(xhr) {
 				xhr.setRequestHeader('Authorization', `Bearer ${sessionStorage.getItem("token")}`)
 			}
-
 		} else {
 			$.getJSON(
 				'http://131.181.190.87:3000/stocks/'+this.state.ticker,
