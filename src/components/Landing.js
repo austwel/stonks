@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { Select, Input, Grid, Table, Header, Pagination } from 'semantic-ui-react';
+import { Redirect } from 'react-router-dom';
+import { Select, Input, Grid, Table, Pagination } from 'semantic-ui-react';
 import { ceil } from 'mathjs';
-import $ from 'jquery';
 import _ from 'lodash';
 
 class Landing extends Component {
@@ -45,7 +44,7 @@ class Landing extends Component {
 			)
 		}).filter(item => {
 			return Object.keys(item).some(key =>
-				item[key].includes(drop=='All'?'':drop)
+				item[key].includes(drop==='All'?'':drop)
 			)
 		})
 
@@ -63,10 +62,10 @@ class Landing extends Component {
 		if(column !== clickedColumn) {
 			this.setState({
 				column: clickedColumn,
-				stocks: _.sortBy(stocks, clickedColumn=='Name'?'name':clickedColumn=='Ticker'?'symbol':'industry'),
+				stocks: _.sortBy(stocks, clickedColumn==='Name'?'name':clickedColumn==='Ticker'?'symbol':'industry'),
 				direction: 'ascending'
 			})
-			this.updateFilters(this.state.search, this.state.drop, _.sortBy(stocks, clickedColumn=='Name'?'name':clickedColumn=='Ticker'?'symbol':'industry'))
+			this.updateFilters(this.state.search, this.state.drop, _.sortBy(stocks, clickedColumn==='Name'?'name':clickedColumn==='Ticker'?'symbol':'industry'))
 			return
 		}
 		this.setState({
@@ -103,6 +102,7 @@ class Landing extends Component {
 	render() {
 
 		if(this.state.redirect) {
+			this.props.update()
 			return <Redirect push to={"/stock?ticker="+this.state.stockPage} />
 		}
 	

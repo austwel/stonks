@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect }  from 'react';
+import React, { Component }  from 'react';
 import Landing from "./components/Landing";
 import Header from "./components/Header";
 import Stock from "./components/Stock";
@@ -7,7 +7,6 @@ import Loading from "./components/Loading";
 import "semantic-ui-css/semantic.min.css";
 import { Grid } from "semantic-ui-react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import jwt from "jsonwebtoken";
 import $ from 'jquery';
 
 class App extends Component {
@@ -66,7 +65,7 @@ class App extends Component {
 									stocks={this.state.stocks} 
 									industries={this.state.industries} 
 									loading={this.state.loading} 
-									updatePage={this.updatePage} 
+									update={this.update} 
 								/>
 							}
 						/>
@@ -79,7 +78,6 @@ class App extends Component {
 									industries={this.state.industries} 
 									loading={this.state.loading} 
 									update={this.update} 
-									updatePage={this.updatePage}
 								/>
 							} 
 						/>

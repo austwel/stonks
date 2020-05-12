@@ -1,9 +1,8 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Link, Route, NavLink, matchPath } from 'react-router-dom';
-import { Form, Tab, Input, Button, Header } from 'semantic-ui-react';
+import { Tab, Header } from 'semantic-ui-react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
-import $ from 'jquery';
 
 class Login extends Component {
 	constructor(props) {
