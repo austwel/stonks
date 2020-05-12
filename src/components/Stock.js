@@ -157,6 +157,20 @@ class Stock extends Component {
 				})
 			}
 			this.forceUpdate()
+			if(this.state.stockData.filter(item => (
+				this.sortDates(new Date(item.timestamp), new Date(this.date[1].getTime()+86400000)) < 1 &&
+				this.sortDates(new Date(item.timestamp), new Date(this.date[0].getTime()+86400000)) > -1
+			)).length===0) {
+				this.setState({
+					modal: true,
+					err: {
+						res: {
+							status: 401
+						}
+					}
+				})
+				this.handleDate(event, {value: [new Date(1572998400000), new Date(1585058399000)]})
+			}
 		}
 
 		// Load on each date change -- OLD
