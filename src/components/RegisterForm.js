@@ -11,7 +11,7 @@ class RegisterForm extends Component {
 			username: '',
 			password: '',
 			confirmPassword: '',
-			modal: false,
+			modal: 0,
 			errors: {
 				statusText: '',
 				responseJSON: {
@@ -51,11 +51,11 @@ class RegisterForm extends Component {
 								message: `Account ${this.state.username} has been created`
 							}
 						},
-						modal: true,
+						modal: 1
 					})
 				})
 				.fail((res) => {
-					this.setState({ errors: res, modal: true })
+					this.setState({ errors: res, modal: 2 })
 				})
 		} else {
 			this.setState({ 
@@ -65,12 +65,12 @@ class RegisterForm extends Component {
 						message: 'Passwords did not match'
 					}
 				},
-				modal: true
+				modal: 2
 			})
 		}
 	}
 
-	close() { this.setState({ modal: false, redirect: true }) }
+	close() { this.setState({ modal: 0, redirect: this.state.modal===2?false:true }) }
 
 	render() {
 
@@ -80,7 +80,7 @@ class RegisterForm extends Component {
 
 		const Mod = () => (
 			<Modal
-				open={this.state.modal}
+				open={this.state.modal==0?false:true}
 				onClose={this.close}
 			>
 				<Modal.Header>

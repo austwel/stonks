@@ -74,9 +74,6 @@ class Stock extends Component {
 		const bm = +b.match(/^\d+/)[0]
 		const bd = +b.match(/\/(\d+)\//)[1]
 		const by = +b.match(/\d+$/)[0]
-		console.log(a, b)
-		console.log(ad, am, ay, '-', bd, bm, by)
-
 		if(ay > by) {
 			return 1
 		} else if(by > ay) {
