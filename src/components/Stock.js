@@ -66,27 +66,23 @@ class Stock extends Component {
 			// Return 1 if a later than b
 			// Return -1 if a earlier than b
 			// Return 0 if a and b are the same day
-		if(typeof a=='object') a = a.toLocaleDateString()
-		if(typeof b=='object') b = b.toLocaleDateString()
-		const am = +a.match(/^\d+/)[0]
-		const ad = +a.match(/\/(\d+)\//)[1]
-		const ay = +a.match(/\d+$/)[0]
-		const bm = +b.match(/^\d+/)[0]
-		const bd = +b.match(/\/(\d+)\//)[1]
-		const by = +b.match(/\d+$/)[0]
-		if(ay > by) {
+		if(typeof a=='object') a = a.toJSON()
+		if(typeof b=='object') b = b.toJSON()
+		a = [a.split(8, 10), a.split(5, 7), a.split(0, 4)]
+		b = [b.split(8, 10), b.split(5, 7), b.split(0, 4)]
+		if(a[2] > b[2]) {
 			return 1
-		} else if(by > ay) {
+		} else if(b[2] > a[2]) {
 			return -1
 		} else {
-			if(am > bm) {
+			if(a[1] > b[1]) {
 				return 1
-			} else if(bm > am) {
+			} else if(b[1] > a[1]) {
 				return -1
 			} else {
-				if(ad > bd) {
+				if(a[0] > b[0]) {
 					return 1
-				} else if(bd > ad) {
+				} else if(b[0] > a[0]) {
 					return -1
 				} else {
 					return 0
